@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Abstractions;
 using System.Net;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -10,14 +11,17 @@ namespace Mmu.Wds.Logic.Areas.Services.Implementation
     internal class DownloadService : IDownloadService
     {
         private readonly IFilePathServant _filePathServant;
+        private readonly IFileSystem _fileSystem;
         private readonly IWebsitePartHandler[] _partHandlers;
 
         public DownloadService(
             IFilePathServant filePathServant,
-            IWebsitePartHandler[] partHandlers)
+            IWebsitePartHandler[] partHandlers,
+            IFileSystem fileSystem)
         {
             _filePathServant = filePathServant;
             _partHandlers = partHandlers;
+            _fileSystem = fileSystem;
         }
 
         public async Task DownloadAsync(Uri downloadUri, string targetPath)
@@ -35,7 +39,13 @@ namespace Mmu.Wds.Logic.Areas.Services.Implementation
                     handler.HandlePart(webClient, htmlDoc, downloadUri, targetPath);
                 }
 
-                htmlDoc.Save(targetPath + @"\index.html");
+                var indexPath = targetPath + @"\index.html";
+                if (!_fileSystem.Directory.Exists(targetPath))
+                {
+                    _fileSystem.Directory.CreateDirectory(targetPath);
+                }
+
+                htmlDoc.Save(indexPath);
             }
         }
     }

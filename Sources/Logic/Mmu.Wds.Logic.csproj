@@ -12,4 +12,8 @@
     <PackageReference Include="System.IO.Abstractions" Version="6.0.21" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Services\WebsitePartHandler\Servants\Implementation\" />
+  </ItemGroup>
+
 </Project>

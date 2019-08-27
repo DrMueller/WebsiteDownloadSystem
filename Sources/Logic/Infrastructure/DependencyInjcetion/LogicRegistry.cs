@@ -17,6 +17,12 @@ namespace Mmu.Wds.Logic.Infrastructure.DependencyInjcetion
             For<IWebsitePartHandler>().Use<LinksHandler>().Singleton();
             For<IWebsitePartHandler>().Use<ImagesHandler>().Singleton();
 
+            For<IFilePathFactory>().Use<FilePathFactory>().Singleton();
+            For<IFilePathServant>().Use<FilePathServant>().Singleton();
+            For<IUrlAlignmentServant>().Use<UrlAlignmentServant>().Singleton();
+
+            For<ICssAlignmentServant>().Use<CssAlignmentServant>().Singleton();
+
             For<IFileSystem>().Use<FileSystem>().Singleton();
             For<IDownloadService>().Use<DownloadService>().Singleton();
             For<IFilePathServant>().Use<FilePathServant>().Singleton();
