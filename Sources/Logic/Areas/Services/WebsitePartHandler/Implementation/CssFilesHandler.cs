@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Net;
@@ -31,7 +32,7 @@ namespace Mmu.Wds.Logic.Areas.Services.WebsitePartHandler.Implementation
             return htmlDoc.DocumentNode
                 .Descendants()
                 .Where(f => f.Name == "link")
-                .Where(f => (f.Attributes.Single(f => f.Name == "rel").Value == "stylesheet"))
+                .Where(f => f.Attributes.Single(f => f.Name == "rel").Value == "stylesheet")
                 .Select(f => f.Attributes.Single(f => f.Name == "href"))
                 .Select(attr => new WebsitePart(attr))
                 .ToList();
@@ -48,8 +49,23 @@ namespace Mmu.Wds.Logic.Areas.Services.WebsitePartHandler.Implementation
                 var refMatch = match.Groups["urlVal"];
                 var includeValue = refMatch.Value;
 
-                var cssValueUrl = _filePathFactory.CreateAbsoluteSavePa
+                var targetSavePath = AlignPath(savePath, includeValue);
             });
+        }
+
+        private string AlignPath(string absolutePath, string newValue)
+        {
+            var newFileName = _fileSystem.Path.GetFileName(newValue);
+            var oldFileName = _fileSystem.Path.GetFileName(absolutePath);
+
+            var newValuePath = absolutePath;
+            newValuePath = newValuePath.Replace(oldFileName, newFileName, StringComparison.Ordinal);
+
+            var newValueParthParts = newValue.Split(_fileSystem.Path.PathSeparator).Skip(1).ToList();
+
+
+
+            return newValuePath;
         }
     }
 }
