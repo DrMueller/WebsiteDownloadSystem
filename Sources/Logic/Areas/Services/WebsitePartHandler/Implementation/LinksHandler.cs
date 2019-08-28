@@ -19,7 +19,8 @@ namespace Mmu.Wds.Logic.Areas.Services.WebsitePartHandler.Implementation
             var unwantedLinks = new string[]
             {
                 "canonical",
-                "alternate"
+                "alternate",
+                "stylesheet" // Handled with CssFileHandler
             };
 
             return htmlDoc.DocumentNode

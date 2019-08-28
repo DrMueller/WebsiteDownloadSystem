@@ -12,16 +12,19 @@ namespace Mmu.Wds.Logic.Areas.Services.Implementation
     {
         private readonly IFilePathServant _filePathServant;
         private readonly IFileSystem _fileSystem;
+        private readonly ICssAlignmentServant _cssAligner;
         private readonly IWebsitePartHandler[] _partHandlers;
 
         public DownloadService(
             IFilePathServant filePathServant,
             IWebsitePartHandler[] partHandlers,
-            IFileSystem fileSystem)
+            IFileSystem fileSystem,
+            ICssAlignmentServant cssAligner)
         {
             _filePathServant = filePathServant;
             _partHandlers = partHandlers;
             _fileSystem = fileSystem;
+            _cssAligner = cssAligner;
         }
 
         public async Task DownloadAsync(Uri downloadUri, string targetPath)
@@ -38,6 +41,8 @@ namespace Mmu.Wds.Logic.Areas.Services.Implementation
                 {
                     handler.HandlePart(webClient, htmlDoc, downloadUri, targetPath);
                 }
+
+                _cssAligner.AlignCssFiles(webClient, downloadUri, targetPath);
 
                 var indexPath = targetPath + @"\index.html";
                 if (!_fileSystem.Directory.Exists(targetPath))

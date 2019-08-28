@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.IO.Abstractions;
 using System.Net;
 using System.Text.RegularExpressions;
+using Mmu.Mlh.LanguageExtensions.Areas.Collections;
 
 namespace Mmu.Wds.Logic.Areas.Services.Servants.Implementation
 {
@@ -16,21 +18,9 @@ namespace Mmu.Wds.Logic.Areas.Services.Servants.Implementation
 
         public void AlignCssFiles(WebClient client, Uri downloadUri, string targetPath)
         {
-            var cssFiles = _fileSystem.Directory.GetFiles(targetPath, "*.css");
+            var cssFilePaths = _fileSystem.Directory.GetFiles(targetPath, "*.css", SearchOption.AllDirectories);
 
-            foreach (var cssFile in cssFiles)
-            {
-                var cssData = _fileSystem.File.ReadAllText(cssFile);
-
-                var regex = new Regex("(url()(\()");
-                var tra = regex.Match(stringBlock);
-                if (tra.Success)
-                {
-                    var refMatch = tra.Groups["include"];
-                    var includeValue = refMatch.Value;
-                }
-
-            }
+           
         }
     }
 }

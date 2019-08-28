@@ -5,6 +5,6 @@ namespace Mmu.Wds.Logic.Areas.Services.Servants
 {
     internal interface ICssAlignmentServant
     {
-        void AlignCssFiles(WebClient client, Uri downloadUri, string targetPath);
+        void AlignCssFiles(WebClient webClient, Uri downloadUri, string targetPath);
     }
 }
