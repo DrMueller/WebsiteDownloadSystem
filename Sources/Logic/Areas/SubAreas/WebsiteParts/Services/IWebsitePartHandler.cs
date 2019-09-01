@@ -2,7 +2,7 @@
 using System.Net;
 using HtmlAgilityPack;
 
-namespace Mmu.Wds.Logic.Areas.Services.WebsitePartHandler
+namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services
 {
     internal interface IWebsitePartHandler
     {

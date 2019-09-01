@@ -1,0 +1,79 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO.Abstractions;
+using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+using Mmu.Mlh.LanguageExtensions.Areas.Collections;
+using Mmu.Wds.Logic.Areas.SubAreas.Files.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.UrlAlignment.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Models;
+
+namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
+{
+    internal class CssFilesHandler : PartHandlerBase
+    {
+        private readonly IFilePathFactory _filePathFactory;
+        private readonly IFileSystem _fileSystem;
+
+        public CssFilesHandler(
+            IFileSystem fileSystem,
+            IFileRepository fileRepo,
+            IUrlAlignmentService urlAligner,
+            IFilePathFactory filePathFactory)
+            : base(fileRepo, urlAligner, filePathFactory)
+        {
+            _fileSystem = fileSystem;
+            _filePathFactory = filePathFactory;
+        }
+
+        protected override IReadOnlyCollection<WebsitePart> GetParts(HtmlDocument htmlDoc)
+        {
+            return htmlDoc.DocumentNode
+                .Descendants()
+                .Where(f => f.Name == "link")
+                .Where(f => f.Attributes.Single(f => f.Name == "rel").Value == "stylesheet")
+                .Select(f => f.Attributes.Single(f => f.Name == "href"))
+                .Select(attr => new WebsitePart(attr))
+                .ToList();
+        }
+
+        protected override void PostProcessPart(WebClient webClient, WebsitePart part, string absoluteUrl, string savePath)
+        {
+            var urlRegex = new Regex(@"(url\()(?<urlVal>.+)(\))");
+            var cssData = _fileSystem.File.ReadAllText(savePath);
+            var matches = urlRegex.Matches(cssData);
+
+            // Read each URL part
+            // For reach part:
+            // Make a relative url in relation to the css url
+
+            // Download the asset, if needed
+            // Make a relative path in relation to the css PATH
+            // Save the new asset
+            // Replace the url with the new path
+
+            matches.ForEach(match =>
+            {
+                var refMatch = match.Groups["urlVal"];
+                var includeValue = refMatch.Value;
+
+                var targetSavePath = AlignPath(savePath, includeValue);
+            });
+        }
+
+        private string AlignPath(string absolutePath, string newValue)
+        {
+            var newFileName = _fileSystem.Path.GetFileName(newValue);
+            var oldFileName = _fileSystem.Path.GetFileName(absolutePath);
+
+            var newValuePath = absolutePath;
+            newValuePath = newValuePath.Replace(oldFileName, newFileName, StringComparison.Ordinal);
+
+            var newValueParthParts = newValue.Split(_fileSystem.Path.PathSeparator).Skip(1).ToList();
+
+            return newValuePath;
+        }
+    }
+}

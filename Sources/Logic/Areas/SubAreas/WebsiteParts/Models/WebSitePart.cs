@@ -1,6 +1,6 @@
 ﻿using HtmlAgilityPack;
 
-namespace Mmu.Wds.Logic.Areas.Services.Models
+namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Models
 {
     internal class WebsitePart
     {

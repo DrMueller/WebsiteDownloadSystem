@@ -1,13 +1,13 @@
 ﻿using System.IO.Abstractions;
 using Mmu.Mlh.LanguageExtensions.Areas.Collections;
 
-namespace Mmu.Wds.Logic.Areas.Services.Servants.Implementation
+namespace Mmu.Wds.Logic.Areas.SubAreas.Files.Services.Implementation
 {
-    internal class FilePathServant : IFilePathServant
+    internal class FileRepository : IFileRepository
     {
         private readonly IFileSystem _fileSystem;
 
-        public FilePathServant(IFileSystem fileSystem)
+        public FileRepository(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
         }

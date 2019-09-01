@@ -1,6 +1,6 @@
-﻿namespace Mmu.Wds.Logic.Areas.Services.Servants
+﻿namespace Mmu.Wds.Logic.Areas.SubAreas.Files.Services
 {
-    internal interface IFilePathServant
+    internal interface IFileRepository
     {
         void CleanPath(string path);
 

@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HtmlAgilityPack;
-using Mmu.Wds.Logic.Areas.Services.Models;
-using Mmu.Wds.Logic.Areas.Services.Servants;
+using Mmu.Wds.Logic.Areas.SubAreas.Files.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.UrlAlignment.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Models;
 
-namespace Mmu.Wds.Logic.Areas.Services.WebsitePartHandler.Implementation
+namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
 {
     internal class ScriptsHandler : PartHandlerBase
     {
-        public ScriptsHandler(IFilePathServant filePathServant, IUrlAlignmentServant urlAligner, IFilePathFactory filePathFactory)
-            : base(filePathServant, urlAligner, filePathFactory)
+        public ScriptsHandler(IFileRepository fileRepo, IUrlAlignmentService urlAligner, IFilePathFactory filePathFactory)
+            : base(fileRepo, urlAligner, filePathFactory)
         {
         }
 

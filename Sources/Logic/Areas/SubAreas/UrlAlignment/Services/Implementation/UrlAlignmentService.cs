@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Mmu.Wds.Logic.Areas.Services.Servants.Implementation
+namespace Mmu.Wds.Logic.Areas.SubAreas.UrlAlignment.Services.Implementation
 {
-    internal class UrlAlignmentServant : IUrlAlignmentServant
+    internal class UrlAlignmentService : IUrlAlignmentService
     {
-        public string CreateAbsolutePath(Uri downloadUri, string path)
+        public string CreateAbsoluteUrl(Uri downloadUri, string path)
         {
             if (path.StartsWith("/", StringComparison.Ordinal))
             {

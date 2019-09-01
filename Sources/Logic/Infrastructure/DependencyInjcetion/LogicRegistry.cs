@@ -1,10 +1,12 @@
 ﻿using System.IO.Abstractions;
-using Mmu.Wds.Logic.Areas.Services;
-using Mmu.Wds.Logic.Areas.Services.Implementation;
-using Mmu.Wds.Logic.Areas.Services.Servants;
-using Mmu.Wds.Logic.Areas.Services.Servants.Implementation;
-using Mmu.Wds.Logic.Areas.Services.WebsitePartHandler;
-using Mmu.Wds.Logic.Areas.Services.WebsitePartHandler.Implementation;
+using Mmu.Wds.Logic.Areas.Orchestration.Services;
+using Mmu.Wds.Logic.Areas.Orchestration.Services.Implementation;
+using Mmu.Wds.Logic.Areas.SubAreas.Files.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.Files.Services.Implementation;
+using Mmu.Wds.Logic.Areas.SubAreas.UrlAlignment.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.UrlAlignment.Services.Implementation;
+using Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation;
 using StructureMap;
 
 namespace Mmu.Wds.Logic.Infrastructure.DependencyInjcetion
@@ -19,14 +21,12 @@ namespace Mmu.Wds.Logic.Infrastructure.DependencyInjcetion
             For<IWebsitePartHandler>().Use<CssFilesHandler>().Singleton();
 
             For<IFilePathFactory>().Use<FilePathFactory>().Singleton();
-            For<IFilePathServant>().Use<FilePathServant>().Singleton();
-            For<IUrlAlignmentServant>().Use<UrlAlignmentServant>().Singleton();
-
-            For<ICssAlignmentServant>().Use<CssAlignmentServant>().Singleton();
+            For<IFileRepository>().Use<FileRepository>().Singleton();
+            For<IUrlAlignmentService>().Use<UrlAlignmentService>().Singleton();
 
             For<IFileSystem>().Use<FileSystem>().Singleton();
             For<IDownloadService>().Use<DownloadService>().Singleton();
-            For<IFilePathServant>().Use<FilePathServant>().Singleton();
+            For<IFileRepository>().Use<FileRepository>().Singleton();
         }
     }
 }

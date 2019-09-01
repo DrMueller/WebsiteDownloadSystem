@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Net;
 using HtmlAgilityPack;
-using Mmu.Wds.Logic.Areas.Services.Models;
-using Mmu.Wds.Logic.Areas.Services.Servants;
+using Mmu.Wds.Logic.Areas.SubAreas.Files.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.UrlAlignment.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Models;
 
-namespace Mmu.Wds.Logic.Areas.Services.WebsitePartHandler.Implementation
+namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
 {
     internal abstract class PartHandlerBase : IWebsitePartHandler
     {
         private readonly IFilePathFactory _filePathFactory;
-        private readonly IFilePathServant _filePathServant;
-        private readonly IUrlAlignmentServant _urlAligner;
+        private readonly IFileRepository _fileRepo;
+        private readonly IUrlAlignmentService _urlAligner;
 
         public PartHandlerBase(
-            IFilePathServant filePathServant,
-            IUrlAlignmentServant urlAligner,
+            IFileRepository fileRepo,
+            IUrlAlignmentService urlAligner,
             IFilePathFactory filePathFactory)
         {
-            _filePathServant = filePathServant;
+            _fileRepo = fileRepo;
             _urlAligner = urlAligner;
             _filePathFactory = filePathFactory;
         }
@@ -29,11 +30,11 @@ namespace Mmu.Wds.Logic.Areas.Services.WebsitePartHandler.Implementation
 
             foreach (var part in pathParts)
             {
-                var absoluteUrlPath = _urlAligner.CreateAbsolutePath(downloadUri, part.Value);
+                var absoluteUrlPath = _urlAligner.CreateAbsoluteUrl(downloadUri, part.Value);
                 var download = webClient.DownloadData(absoluteUrlPath);
                 var savePath = _filePathFactory.CreateAbsoluteSavePath(targetPath, part.Value);
                 part.WriteValue(savePath);
-                _filePathServant.SaveData(savePath, download);
+                _fileRepo.SaveData(savePath, download);
                 PostProcessPart(webClient, part, absoluteUrlPath, savePath);
             }
         }

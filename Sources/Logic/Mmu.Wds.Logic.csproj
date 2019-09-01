@@ -7,12 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\Services\WebsitePartHandler\Servants\**" />
-    <EmbeddedResource Remove="Areas\Services\WebsitePartHandler\Servants\**" />
-    <None Remove="Areas\Services\WebsitePartHandler\Servants\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.12" />
     <PackageReference Include="Mmu.Mlh.ServiceProvisioning" Version="2.0.7" />
     <PackageReference Include="System.IO.Abstractions" Version="6.0.21" />

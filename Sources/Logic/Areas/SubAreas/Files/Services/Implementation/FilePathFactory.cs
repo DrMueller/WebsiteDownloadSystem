@@ -2,7 +2,7 @@
 using System.IO.Abstractions;
 using System.Linq;
 
-namespace Mmu.Wds.Logic.Areas.Services.Servants.Implementation
+namespace Mmu.Wds.Logic.Areas.SubAreas.Files.Services.Implementation
 {
     internal class FilePathFactory : IFilePathFactory
     {

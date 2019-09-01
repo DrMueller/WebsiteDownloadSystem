@@ -1,4 +1,4 @@
-﻿namespace Mmu.Wds.Logic.Areas.Services.Servants
+﻿namespace Mmu.Wds.Logic.Areas.SubAreas.Files.Services
 {
     internal interface IFilePathFactory
     {
