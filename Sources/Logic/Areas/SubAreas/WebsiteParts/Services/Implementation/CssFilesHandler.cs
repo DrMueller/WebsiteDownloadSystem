@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Net;
@@ -44,24 +45,19 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
 
         protected override void PostProcessPart(WebClient webClient, WebsitePart part, string absoluteUrl, string savePath)
         {
-            var urlRegex = new Regex(@"(url\()(?<urlVal>.+)(\))");
+            var urlRegex = new Regex(@"(url\()(?<urlVal>.+)(?\))");
             var cssData = _fileSystem.File.ReadAllText(savePath);
             var matches = urlRegex.Matches(cssData);
 
-            // Read each URL part
-            // For reach part:
-            // Make a relative url in relation to the css url
+            //   src: url("../resources/fonts/slick.eot?#iefix") format("embedded-opentype"), url("../resources/fonts/slick.woff") format("woff"), url("../resources/fonts/slick.ttf") format("truetype"), url("../resources/fonts/slick.svg#slick") format("svg");
 
-            // Download the asset, if needed
-            // Make a relative path in relation to the css PATH
-            // Save the new asset
-            // Replace the url with the new path
 
             matches.ForEach(match =>
             {
-                var refMatch = match.Groups["urlVal"];
-                var includeValue = refMatch.Value;
+                var includeValue = match.Groups["urlVal"].Value;
                 includeValue = includeValue.Replace("\"", string.Empty, StringComparison.Ordinal);
+
+                if (includeValue.Contains("slick.eot")) Debugger.Break();
 
                 var cssUrl = AlignUrl(absoluteUrl, includeValue);
                 var cssFilePath = AlignFilePath(savePath, includeValue);

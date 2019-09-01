@@ -51,7 +51,7 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
             _context = context;
 
             _context.DownloadUrl = "https://www.bfh.ch/en/research/reference-projects/peropa/";
-            _context.TargetPath = @"C:\Users\Matthias\Desktop\Work\HTML";
+            _context.TargetPath = @"C:\Users\Matthias\Desktop\Work\Html";
 
             Commands = new CommandsViewData(DownloadWebsite);
             return Task.CompletedTask;
