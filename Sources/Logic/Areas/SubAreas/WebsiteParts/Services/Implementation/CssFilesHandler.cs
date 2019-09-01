@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Mmu.Mlh.LanguageExtensions.Areas.Collections;
+using Mmu.Mlh.LanguageExtensions.Areas.Types.FunctionsResults;
 using Mmu.Wds.Logic.Areas.SubAreas.Files.Services;
 using Mmu.Wds.Logic.Areas.SubAreas.UrlAlignment.Services;
 using Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Models;
@@ -15,6 +16,7 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
     internal class CssFilesHandler : PartHandlerBase
     {
         private readonly IFilePathFactory _filePathFactory;
+        private readonly IFileRepository _fileRepo;
         private readonly IFileSystem _fileSystem;
 
         public CssFilesHandler(
@@ -25,6 +27,7 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
             : base(fileRepo, urlAligner, filePathFactory)
         {
             _fileSystem = fileSystem;
+            _fileRepo = fileRepo;
             _filePathFactory = filePathFactory;
         }
 
@@ -58,22 +61,99 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
             {
                 var refMatch = match.Groups["urlVal"];
                 var includeValue = refMatch.Value;
+                includeValue = includeValue.Replace("\"", string.Empty, StringComparison.Ordinal);
 
-                var targetSavePath = AlignPath(savePath, includeValue);
+                var cssUrl = AlignUrl(absoluteUrl, includeValue);
+                var cssFilePath = AlignFilePath(savePath, includeValue);
+
+                if (!_fileSystem.File.Exists(cssFilePath))
+                {
+                    var downloadResult = TryDownloading(webClient, cssUrl);
+                    if (downloadResult.IsSuccess)
+                    {
+                        _fileRepo.SaveData(cssFilePath, downloadResult.Value);
+                        cssData = cssData.Replace(includeValue, cssFilePath, StringComparison.Ordinal);
+                    }
+                }
             });
+
+            _fileRepo.SaveString(savePath, cssData);
         }
 
-        private string AlignPath(string absolutePath, string newValue)
+        private static FunctionResult<byte[]> TryDownloading(WebClient webClient, string url)
+        {
+            try
+            {
+                var data = webClient.DownloadData(url);
+                return FunctionResult.CreateSuccess(data);
+            }
+            catch
+            {
+                return FunctionResult.CreateFailure<byte[]>();
+            }
+        }
+
+        private string AlignFilePath(string savePath, string newValue)
+        {
+            savePath = savePath.Replace("\\", "/", StringComparison.Ordinal);
+            newValue = newValue.Replace("\\", "/", StringComparison.Ordinal);
+
+            var newFileName = _fileSystem.Path.GetFileName(newValue);
+            var oldFileName = _fileSystem.Path.GetFileName(savePath);
+
+            var newValuePath = savePath.Replace(oldFileName, string.Empty, StringComparison.Ordinal);
+
+            var newValueParthParts = newValue.Replace(newFileName, string.Empty, StringComparison.Ordinal).Split(@"/").ToList();
+            var created = savePath.Replace("/" + oldFileName, string.Empty, StringComparison.Ordinal).Split(@"/").Reverse().ToList();
+
+            for (var i = 0; i < newValueParthParts.Count; i++)
+            {
+                var newVal = newValueParthParts.ElementAt(i);
+                if (newVal == "..")
+                {
+                    created.RemoveAt(i);
+                }
+                else
+                {
+                    created.Insert(0, newVal);
+                }
+            }
+
+            created.Reverse();
+            var result = string.Join(@"/", created);
+            result += newFileName;
+
+            return result;
+        }
+
+        private string AlignUrl(string absoluteCssPath, string newValue)
         {
             var newFileName = _fileSystem.Path.GetFileName(newValue);
-            var oldFileName = _fileSystem.Path.GetFileName(absolutePath);
+            var oldFileName = _fileSystem.Path.GetFileName(absoluteCssPath);
 
-            var newValuePath = absolutePath;
-            newValuePath = newValuePath.Replace(oldFileName, newFileName, StringComparison.Ordinal);
+            var newValuePath = absoluteCssPath.Replace(oldFileName, string.Empty, StringComparison.Ordinal);
 
-            var newValueParthParts = newValue.Split(_fileSystem.Path.PathSeparator).Skip(1).ToList();
+            var newValueParthParts = newValue.Replace(newFileName, string.Empty, StringComparison.Ordinal).Split(@"/").ToList();
+            var created = absoluteCssPath.Replace("/" + oldFileName, string.Empty, StringComparison.Ordinal).Split(@"/").Reverse().ToList();
 
-            return newValuePath;
+            for (var i = 0; i < newValueParthParts.Count; i++)
+            {
+                var newVal = newValueParthParts.ElementAt(i);
+                if (newVal == "..")
+                {
+                    created.RemoveAt(i);
+                }
+                else
+                {
+                    created.Insert(0, newVal);
+                }
+            }
+
+            created.Reverse();
+            var result = string.Join(@"/", created);
+            result += newFileName;
+
+            return result;
         }
     }
 }

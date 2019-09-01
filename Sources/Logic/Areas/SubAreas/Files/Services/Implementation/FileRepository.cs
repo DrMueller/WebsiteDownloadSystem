@@ -20,13 +20,14 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.Files.Services.Implementation
 
         public void SaveData(string filePath, byte[] data)
         {
-            var dirPath = _fileSystem.Path.GetDirectoryName(filePath);
-            if (!_fileSystem.Directory.Exists(dirPath))
-            {
-                _fileSystem.Directory.CreateDirectory(dirPath);
-            }
-
+            AssureDirectoryExists(filePath);
             _fileSystem.File.WriteAllBytes(filePath, data);
+        }
+
+        public void SaveString(string filePath, string data)
+        {
+            AssureDirectoryExists(filePath);
+            _fileSystem.File.WriteAllText(filePath, data);
         }
 
         private static void RecursiveDelete(IDirectoryInfo directoryInfo)
@@ -38,6 +39,15 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.Files.Services.Implementation
 
             directoryInfo.EnumerateDirectories().ForEach(dir => RecursiveDelete(dir));
             directoryInfo.Delete(true);
+        }
+
+        private void AssureDirectoryExists(string filePath)
+        {
+            var dirPath = _fileSystem.Path.GetDirectoryName(filePath);
+            if (!_fileSystem.Directory.Exists(dirPath))
+            {
+                _fileSystem.Directory.CreateDirectory(dirPath);
+            }
         }
     }
 }

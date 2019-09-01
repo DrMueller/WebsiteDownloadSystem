@@ -5,5 +5,7 @@
         void CleanPath(string path);
 
         void SaveData(string filePath, byte[] data);
+
+        void SaveString(string filePath, string data);
     }
 }
