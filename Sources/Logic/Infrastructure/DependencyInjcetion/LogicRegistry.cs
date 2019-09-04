@@ -5,6 +5,8 @@ using Mmu.Wds.Logic.Areas.Orchestration.Services.Servants;
 using Mmu.Wds.Logic.Areas.Orchestration.Services.Servants.Implementation;
 using Mmu.Wds.Logic.Areas.SubAreas.CssHandling.Services;
 using Mmu.Wds.Logic.Areas.SubAreas.CssHandling.Services.Implementation;
+using Mmu.Wds.Logic.Areas.SubAreas.CssHandling.Services.Servants;
+using Mmu.Wds.Logic.Areas.SubAreas.CssHandling.Services.Servants.Implementation;
 using Mmu.Wds.Logic.Areas.SubAreas.Files.Services;
 using Mmu.Wds.Logic.Areas.SubAreas.Files.Services.Implementation;
 using Mmu.Wds.Logic.Areas.SubAreas.UrlAlignment.Services;
@@ -29,7 +31,8 @@ namespace Mmu.Wds.Logic.Infrastructure.DependencyInjcetion
             For<IHtmlDocumentServant>().Use<HtmlDocumentServant>().Singleton();
 
             // CssHandling
-            For<ICssFileFactory>().Use<CssFileFactory>().Singleton();
+            For<ICssFileRepository>().Use<CssFileRepository>().Singleton();
+            For<IPathAligner>().Use<PathAligner>().Singleton();
 
             // Files
             For<IFileRepository>().Use<FileRepository>().Singleton();

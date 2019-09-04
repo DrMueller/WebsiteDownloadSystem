@@ -6,19 +6,19 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.CssHandling.Models
 {
     internal class CssFile
     {
-        private readonly string _filePath;
         public string Content { get; private set; }
+        public string FilePath { get; }
         public IReadOnlyCollection<CssUrl> Urls { get; }
 
-        public CssFile(IReadOnlyCollection<CssUrl> urls, string content, string filePath)
+        public CssFile(string filePath, string content, IReadOnlyCollection<CssUrl> urls)
         {
-            Guard.ObjectNotNull(() => urls);
-            Guard.StringNotNullOrEmpty(() => content);
             Guard.StringNotNullOrEmpty(() => filePath);
+            Guard.StringNotNullOrEmpty(() => content);
+            Guard.ObjectNotNull(() => urls);
 
             Urls = urls;
+            FilePath = filePath;
             Content = content;
-            _filePath = filePath;
         }
 
         internal void AlignUrlFilePath(CssUrl url)

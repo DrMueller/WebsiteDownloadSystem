@@ -8,7 +8,6 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.WebCommunication.Services.Implementation
         {
             var webClient = new WebClient();
             return new WebProxy(webClient);
-
         }
     }
 }

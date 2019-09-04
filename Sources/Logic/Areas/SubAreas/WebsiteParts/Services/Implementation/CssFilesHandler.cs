@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using HtmlAgilityPack;
+using Mmu.Mlh.LanguageExtensions.Areas.Collections;
 using Mmu.Wds.Logic.Areas.SubAreas.CssHandling.Services;
 using Mmu.Wds.Logic.Areas.SubAreas.Files.Services;
 using Mmu.Wds.Logic.Areas.SubAreas.UrlAlignment.Services;
@@ -13,7 +13,7 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
 {
     internal class CssFilesHandler : PartHandlerBase
     {
-        private readonly ICssFileFactory _cssFileFactory;
+        private readonly ICssFileRepository _cssFileRepository;
         private readonly IFileRepository _fileRepo;
         private readonly IFileSystem _fileSystem;
 
@@ -22,12 +22,12 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
             IFileRepository fileRepo,
             IUrlAlignmentService urlAligner,
             IFilePathFactory filePathFactory,
-            ICssFileFactory cssFileFactory)
+            ICssFileRepository cssFileRepository)
             : base(fileRepo, urlAligner, filePathFactory)
         {
             _fileSystem = fileSystem;
             _fileRepo = fileRepo;
-            _cssFileFactory = cssFileFactory;
+            _cssFileRepository = cssFileRepository;
         }
 
         protected override IReadOnlyCollection<WebsitePart> GetParts(HtmlDocument htmlDoc)
@@ -43,8 +43,8 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
 
         protected override void PostProcessPart(IWebProxy webProxy, WebsitePart part, string fileUrl, string fileSavePath)
         {
-            var cssFile = _cssFileFactory.Parse(fileSavePath, fileUrl);
-            var fileUrls = cssFile.Urls.Where(f => f.TargetsFile).ToList();
+            var cssFile = _cssFileRepository.Parse(fileSavePath, fileUrl);
+            var fileUrls = cssFile.Urls.Where(f => f.TargetsFile);
 
             fileUrls.ForEach(url =>
             {
@@ -60,7 +60,7 @@ namespace Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services.Implementation
                 cssFile.AlignUrlFilePath(url);
             });
 
-            _fileRepo.SaveString(fileSavePath, cssFile.Content);
+            _cssFileRepository.Save(cssFile);
         }
     }
 }

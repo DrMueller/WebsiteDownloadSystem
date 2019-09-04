@@ -23,17 +23,11 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
                 return new ViewModelCommand("Download!",
                     new RelayCommand(async () =>
                     {
-                        try
-                        {
-                            _informationPublisher.Publish(InformationEntry.CreateInfo("Downloading..", true));
-                            await _downloadService.DownloadAsync(
-                                new Uri(_context.DownloadUrl),
-                                _context.TargetPath);
-                        }
-                        finally
-                        {
-                            _informationPublisher.Publish(InformationEntry.CreateSuccess("Download finished!", false, 5));
-                        }
+                        _informationPublisher.Publish(InformationEntry.CreateInfo("Downloading..", true));
+                        await _downloadService.DownloadAsync(
+                            new Uri(_context.DownloadUrl),
+                            _context.TargetPath);
+                        _informationPublisher.Publish(InformationEntry.CreateSuccess("Download finished!", false, 5));
                     }, CanDownloadWebsite));
             }
         }
