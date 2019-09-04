@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO.Abstractions;
-using System.Net;
 using System.Threading.Tasks;
-using HtmlAgilityPack;
+using Mmu.Wds.Logic.Areas.Orchestration.Services.Servants;
 using Mmu.Wds.Logic.Areas.SubAreas.Files.Services;
+using Mmu.Wds.Logic.Areas.SubAreas.WebCommunication.Services;
 using Mmu.Wds.Logic.Areas.SubAreas.WebsiteParts.Services;
 
 namespace Mmu.Wds.Logic.Areas.Orchestration.Services.Implementation
@@ -11,17 +10,20 @@ namespace Mmu.Wds.Logic.Areas.Orchestration.Services.Implementation
     internal class DownloadService : IDownloadService
     {
         private readonly IFileRepository _filePathServant;
-        private readonly IFileSystem _fileSystem;
+        private readonly IHtmlDocumentServant _htmlDocumentServant;
         private readonly IWebsitePartHandler[] _partHandlers;
+        private readonly IWebProxyFactory _webProxyFactory;
 
         public DownloadService(
             IFileRepository fileRepo,
             IWebsitePartHandler[] partHandlers,
-            IFileSystem fileSystem)
+            IWebProxyFactory webProxyFactory,
+            IHtmlDocumentServant htmlDocumentServant)
         {
             _filePathServant = fileRepo;
             _partHandlers = partHandlers;
-            _fileSystem = fileSystem;
+            _webProxyFactory = webProxyFactory;
+            _htmlDocumentServant = htmlDocumentServant;
         }
 
         public async Task DownloadAsync(Uri downloadUri, string targetPath)
@@ -29,25 +31,15 @@ namespace Mmu.Wds.Logic.Areas.Orchestration.Services.Implementation
             await Task.Run(() =>
             {
                 _filePathServant.CleanPath(targetPath);
-
-                using (var webClient = new WebClient())
+                using (var webProxy = _webProxyFactory.Create())
                 {
-                    var reply = webClient.DownloadString(downloadUri);
-                    var htmlDoc = new HtmlDocument();
-                    htmlDoc.LoadHtml(reply);
-
+                    var htmlDocument = _htmlDocumentServant.CreateDocument(webProxy, downloadUri);
                     foreach (var handler in _partHandlers)
                     {
-                        handler.HandlePart(webClient, htmlDoc, downloadUri, targetPath);
+                        handler.HandlePart(webProxy, htmlDocument, downloadUri, targetPath);
                     }
 
-                    var indexPath = targetPath + @"\index.html";
-                    if (!_fileSystem.Directory.Exists(targetPath))
-                    {
-                        _fileSystem.Directory.CreateDirectory(targetPath);
-                    }
-
-                    htmlDoc.Save(indexPath);
+                    _htmlDocumentServant.SaveDocument(targetPath, htmlDocument);
                 }
             });
         }
