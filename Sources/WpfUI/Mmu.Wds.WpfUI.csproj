@@ -9,21 +9,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\ViewData\**" />
+    <EmbeddedResource Remove="Areas\ViewData\**" />
+    <None Remove="Areas\ViewData\**" />
+    <Page Remove="Areas\ViewData\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Areas\ViewModels\DownloadView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mmu.Mlh.WpfCoreExtensions" Version="1.1.4" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
+    <PackageReference Include="Mmu.Mlh.WpfCoreExtensions" Version="2.3.12" />
+    <PackageReference Include="System.IO.Abstractions" Version="12.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\ViewServices\" />
-    <Folder Include="Areas\ViewData\" />
     <Folder Include="Infrastructure\Assets\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Logic\Mmu.Wds.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>

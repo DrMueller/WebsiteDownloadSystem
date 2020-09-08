@@ -9,7 +9,8 @@ namespace Mmu.Wds.WpfUI
         protected override async void OnStartup(StartupEventArgs e)
         {
             var assembly = typeof(App).Assembly;
-            var appConfig = WpfAppConfig.CreateWithDefaultIcon(assembly, "Website Download System");
+            var windowConfig = WindowConfiguration.CreateWithDefaultIcon(assembly, "Website Download System");
+            var appConfig = new WpfAppConfiguration(assembly, windowConfig);
             await AppStartService.StartAppAsync(appConfig);
         }
     }

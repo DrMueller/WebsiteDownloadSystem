@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Mmu.Mlh.WpfCoreExtensions.Areas.Aspects.InformationHandling.Models;
-using Mmu.Mlh.WpfCoreExtensions.Areas.Aspects.InformationHandling.Services;
+using System.Windows;
+using Mmu.Mlh.WpfCoreExtensions.Areas.Aspects.ApplicationInformations.Models;
+using Mmu.Mlh.WpfCoreExtensions.Areas.Aspects.ApplicationInformations.Services;
 using Mmu.Mlh.WpfCoreExtensions.Areas.MvvmShell.CommandManagement.Commands;
 using Mmu.Mlh.WpfCoreExtensions.Areas.MvvmShell.CommandManagement.Components.CommandBars.ViewData;
 using Mmu.Mlh.WpfCoreExtensions.Areas.MvvmShell.CommandManagement.ViewModelCommands;
-using Mmu.Wds.Logic.Areas.Orchestration.Services;
+using Mmu.Mlh.WpfCoreExtensions.Areas.ViewExtensions.Grids.InformationGrids.ViewData;
+using Mmu.Wds.WpfUI.Areas.ViewServices.Orchestration.Models;
+using Mmu.Wds.WpfUI.Areas.ViewServices.Orchestration.Services;
 
 namespace Mmu.Wds.WpfUI.Areas.ViewModels
 {
@@ -20,15 +23,23 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
         {
             get
             {
-                return new ViewModelCommand("Download!",
-                    new RelayCommand(async () =>
-                    {
-                        _informationPublisher.Publish(InformationEntry.CreateInfo("Downloading..", true));
-                        await _downloadService.DownloadAsync(
-                            new Uri(_context.DownloadUrl),
-                            _context.TargetPath);
-                        _informationPublisher.Publish(InformationEntry.CreateSuccess("Download finished!", false, 5));
-                    }, CanDownloadWebsite));
+                return new ViewModelCommand(
+                    "Download!",
+                    new RelayCommand(
+                        async () =>
+                        {
+                            _informationPublisher.Publish(InformationEntry.CreateInfo("Downloading..", true));
+
+                            var credentials = new Credentials(_context.UserName, _context.Password);
+                            await _downloadService.DownloadAsync(
+                                new Uri(_context.DownloadUrl),
+                                _context.TargetPath,
+                                credentials,
+                                OnNewInfo);
+
+                            _informationPublisher.Publish(InformationEntry.CreateSuccess("Download finished!", false, 5));
+                        },
+                        CanDownloadWebsite));
             }
         }
 
@@ -44,8 +55,10 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
         {
             _context = context;
 
-            _context.DownloadUrl = "https://www.bfh.ch/en/research/reference-projects/peropa/";
+            _context.DownloadUrl = "http://www.google.ch";
             _context.TargetPath = @"C:\Users\mlm\Desktop\Stuff\Privat\HTML";
+            _context.UserName = "test";
+            _context.Password = "test2";
 
             Commands = new CommandsViewData(DownloadWebsite);
             return Task.CompletedTask;
@@ -56,6 +69,15 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
             return !_context.DownloadIsRunning
                 && !string.IsNullOrEmpty(_context.DownloadUrl)
                 && !string.IsNullOrEmpty(_context.TargetPath);
+        }
+
+        private void OnNewInfo(InformationGridEntryViewData data)
+        {
+            Application.Current.Dispatcher.Invoke(
+                () =>
+                {
+                    _context.InformationEntries.Insert(0, data);
+                });
         }
     }
 }

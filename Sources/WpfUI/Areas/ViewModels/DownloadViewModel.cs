@@ -1,17 +1,20 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Mmu.Mlh.WpfCoreExtensions.Areas.MvvmShell.CommandManagement.Components.CommandBars.ViewData;
 using Mmu.Mlh.WpfCoreExtensions.Areas.MvvmShell.ViewModels;
 using Mmu.Mlh.WpfCoreExtensions.Areas.MvvmShell.ViewModels.Behaviors;
+using Mmu.Mlh.WpfCoreExtensions.Areas.ViewExtensions.Grids.InformationGrids.ViewData;
 
 namespace Mmu.Wds.WpfUI.Areas.ViewModels
 {
     public class DownloadViewModel : ViewModelBase, INavigatableViewModel, IInitializableViewModel
     {
         private readonly CommandContainer _commandContainer;
-
         private bool _downloadIsRunning;
         private string _downloadUrl;
+        private string _password;
         private string _targetPath;
+        private string _userName;
         public CommandsViewData Commands => _commandContainer.Commands;
 
         public bool DownloadIsRunning
@@ -19,11 +22,13 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
             get => _downloadIsRunning;
             set
             {
-                if (_downloadIsRunning != value)
+                if (_downloadIsRunning == value)
                 {
-                    _downloadIsRunning = value;
-                    OnPropertyChanged();
+                    return;
                 }
+
+                _downloadIsRunning = value;
+                OnPropertyChanged();
             }
         }
 
@@ -41,21 +46,52 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
         }
 
         public string HeadingDescription => "Download Website";
-
+        public ObservableCollection<InformationGridEntryViewData> InformationEntries { get; } = new ObservableCollection<InformationGridEntryViewData>();
         public string NavigationDescription => "Download";
-
         public int NavigationSequence => 1;
+
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                if (_password == value)
+                {
+                    return;
+                }
+
+                _password = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string TargetPath
         {
             get => _targetPath;
             set
             {
-                if (_targetPath != value)
+                if (_targetPath == value)
                 {
-                    _targetPath = value;
-                    OnPropertyChanged();
+                    return;
                 }
+
+                _targetPath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string UserName
+        {
+            get => _userName;
+            set
+            {
+                if (_userName == value)
+                {
+                    return;
+                }
+
+                _userName = value;
+                OnPropertyChanged();
             }
         }
 
