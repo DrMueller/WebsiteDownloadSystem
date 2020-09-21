@@ -23,13 +23,38 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
         {
             onNewInfo(new InformationGridEntryViewData("Fetching images.."));
 
-            return htmlDoc
+            var imgNodes = htmlDoc
                 .DocumentNode
                 .Descendants()
                 .Where(f => f.Name == "img")
                 .Select(f => f.Attributes.Single(f => f.Name == "src"))
                 .Select(attr => new WebsitePart(attr))
                 .ToList();
+
+            var srcNodeAttributes = htmlDoc
+                .DocumentNode
+                .Descendants()
+                .Where(f => f.Name == "source")
+                .Select(f => f.Attributes.Single(f => f.Name == "srcset"))
+                .ToList();
+
+            var srcNodes = srcNodeAttributes.Select(
+                attr =>
+                {
+                    var val = attr.Value;
+                    var commaIndex = val.IndexOf(',');
+                    if (commaIndex > -1)
+                    {
+                        val = val.Substring(0, commaIndex);
+                        attr.Value = val;
+                    }
+
+                    return new WebsitePart(attr);
+                });
+
+            var result = imgNodes.Concat(srcNodes).ToList();
+
+            return result;
         }
     }
 }
