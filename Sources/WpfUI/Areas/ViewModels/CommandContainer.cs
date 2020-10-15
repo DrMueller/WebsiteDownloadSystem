@@ -7,6 +7,7 @@ using Mmu.Mlh.WpfCoreExtensions.Areas.MvvmShell.CommandManagement.Commands;
 using Mmu.Mlh.WpfCoreExtensions.Areas.MvvmShell.CommandManagement.Components.CommandBars.ViewData;
 using Mmu.Mlh.WpfCoreExtensions.Areas.MvvmShell.CommandManagement.ViewModelCommands;
 using Mmu.Mlh.WpfCoreExtensions.Areas.ViewExtensions.Grids.InformationGrids.ViewData;
+using Mmu.Wds.WpfUI.Areas.ViewData;
 using Mmu.Wds.WpfUI.Areas.ViewServices.Orchestration.Models;
 using Mmu.Wds.WpfUI.Areas.ViewServices.Orchestration.Services;
 
@@ -25,16 +26,19 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
             {
                 return new ViewModelCommand(
                     "Download!",
-                    new RelayCommand(
+                    new AsyncRelayCommand(
                         async () =>
                         {
                             _informationPublisher.Publish(InformationEntry.CreateInfo("Downloading..", true));
+
+                            var linkOptions = new LinkHandlingOptions(_context.DownloadLocally);
 
                             var credentials = new Credentials(_context.UserName, _context.Password);
                             await _downloadService.DownloadAsync(
                                 new Uri(_context.DownloadUrl),
                                 _context.TargetPath,
                                 credentials,
+                                linkOptions,
                                 OnNewInfo);
 
                             _informationPublisher.Publish(InformationEntry.CreateSuccess("Download finished!", false, 5));

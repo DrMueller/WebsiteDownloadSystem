@@ -1,6 +1,7 @@
 ﻿using System;
 using HtmlAgilityPack;
 using Mmu.Mlh.WpfCoreExtensions.Areas.ViewExtensions.Grids.InformationGrids.ViewData;
+using Mmu.Wds.WpfUI.Areas.ViewData;
 using Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebCommunication.Services;
 
 namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services
@@ -12,6 +13,7 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services
             HtmlDocument htmlDoc,
             Uri downloadUri,
             string targetPath,
+            LinkHandlingOptions linkHandlingOption,
             Action<InformationGridEntryViewData> onNewInfo);
     }
 }

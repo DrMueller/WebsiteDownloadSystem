@@ -27,7 +27,7 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
                 .DocumentNode
                 .Descendants()
                 .Where(f => f.Name == "img")
-                .Select(f => f.Attributes.Single(f => f.Name == "src"))
+                .Select(f => f.Attributes.Single(attr => attr.Name == "src"))
                 .Select(attr => new WebsitePart(attr))
                 .ToList();
 
@@ -35,7 +35,7 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
                 .DocumentNode
                 .Descendants()
                 .Where(f => f.Name == "source")
-                .Select(f => f.Attributes.Single(f => f.Name == "srcset"))
+                .Select(f => f.Attributes.Single(src => src.Name == "srcset"))
                 .ToList();
 
             var srcNodes = srcNodeAttributes.Select(

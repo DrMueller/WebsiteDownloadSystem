@@ -23,8 +23,8 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
             return htmlDoc.DocumentNode
                 .Descendants()
                 .Where(f => f.Name == "script")
-                .Where(f => f.Attributes.Any(f => f.Name == "src"))
-                .Select(f => f.Attributes.Single(f => f.Name == "src"))
+                .Where(f => f.Attributes.Any(src => src.Name == "src"))
+                .Select(f => f.Attributes.Single(src => src.Name == "src"))
                 .Select(attr => new WebsitePart(attr))
                 .ToList();
         }

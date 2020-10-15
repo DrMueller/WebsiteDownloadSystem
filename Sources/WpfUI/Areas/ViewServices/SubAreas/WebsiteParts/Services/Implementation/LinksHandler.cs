@@ -30,8 +30,8 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
             return htmlDoc.DocumentNode
                 .Descendants()
                 .Where(f => f.Name == "link")
-                .Where(f => !unwantedLinks.Contains(f.Attributes.Single(f => f.Name == "rel").Value))
-                .Select(f => f.Attributes.Single(f => f.Name == "href"))
+                .Where(f => !unwantedLinks.Contains(f.Attributes.Single(rel => rel.Name == "rel").Value))
+                .Select(f => f.Attributes.Single(href => href.Name == "href"))
                 .Select(attr => new WebsitePart(attr))
                 .ToList();
         }

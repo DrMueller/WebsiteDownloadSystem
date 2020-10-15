@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Mmu.Mlh.WpfCoreExtensions.Areas.ViewExtensions.Grids.InformationGrids.ViewData;
+using Mmu.Wds.WpfUI.Areas.ViewData;
 using Mmu.Wds.WpfUI.Areas.ViewServices.Orchestration.Models;
 using Mmu.Wds.WpfUI.Areas.ViewServices.Orchestration.Services.Servants;
 using Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.Files.Services;
@@ -28,7 +29,12 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.Orchestration.Services.Implementation
             _htmlDocumentServant = htmlDocumentServant;
         }
 
-        public async Task DownloadAsync(Uri downloadUri, string targetPath, Credentials credentials, Action<InformationGridEntryViewData> onNewInfo)
+        public async Task DownloadAsync(
+            Uri downloadUri,
+            string targetPath,
+            Credentials credentials,
+            LinkHandlingOptions linkHandlingOption,
+            Action<InformationGridEntryViewData> onNewInfo)
         {
             await Task.Run(
                 () =>
@@ -40,7 +46,7 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.Orchestration.Services.Implementation
                     var htmlDocument = _htmlDocumentServant.CreateDocument(webProxy, downloadUri);
                     foreach (var handler in _partHandlers)
                     {
-                        handler.HandlePart(webProxy, htmlDocument, downloadUri, targetPath, onNewInfo);
+                        handler.HandlePart(webProxy, htmlDocument, downloadUri, targetPath, linkHandlingOption, onNewInfo);
                     }
 
                     _htmlDocumentServant.SaveDocument(targetPath, htmlDocument);

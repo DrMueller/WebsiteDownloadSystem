@@ -11,6 +11,7 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
     {
         private readonly CommandContainer _commandContainer;
         private bool _downloadIsRunning;
+        private bool _downloadLocally;
         private string _downloadUrl;
         private string _password;
         private string _targetPath;
@@ -28,6 +29,21 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
                 }
 
                 _downloadIsRunning = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool DownloadLocally
+        {
+            get => _downloadLocally;
+            set
+            {
+                if (_downloadLocally == value)
+                {
+                    return;
+                }
+
+                _downloadLocally = value;
                 OnPropertyChanged();
             }
         }

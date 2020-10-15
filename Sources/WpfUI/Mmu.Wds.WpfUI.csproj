@@ -9,13 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Areas\ViewData\**" />
-    <EmbeddedResource Remove="Areas\ViewData\**" />
-    <None Remove="Areas\ViewData\**" />
-    <Page Remove="Areas\ViewData\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Areas\ViewModels\DownloadView.xaml" />
   </ItemGroup>
 

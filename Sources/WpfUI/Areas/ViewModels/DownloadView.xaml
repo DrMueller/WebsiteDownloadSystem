@@ -22,6 +22,7 @@
      <RowDefinition Height="*" />
      <RowDefinition Height="*" />
      <RowDefinition Height="*" />
+     <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
     <Grid.ColumnDefinitions>
@@ -46,14 +47,14 @@
       <ColumnDefinition Width="*" />
      </Grid.ColumnDefinitions>
 
-
      <TextBox Grid.Column="1" Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
      <Label Grid.Column="2">Password</Label>
      <TextBox Grid.Column="3" Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
     </Grid>
 
+
+    <CheckBox Grid.Row="3" Grid.Column="1" VerticalContentAlignment="Center" IsChecked="{Binding DownloadLocally, Mode=TwoWay}">Download locally</CheckBox>
    </Grid>
   </GroupBox>
 

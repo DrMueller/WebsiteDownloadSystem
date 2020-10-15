@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using HtmlAgilityPack;
 using Mmu.Mlh.WpfCoreExtensions.Areas.ViewExtensions.Grids.InformationGrids.ViewData;
+using Mmu.Wds.WpfUI.Areas.ViewData;
 using Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.Files.Services;
 using Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.UrlAlignment.Services;
 using Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebCommunication.Services;
@@ -25,18 +26,32 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
             _filePathFactory = filePathFactory;
         }
 
-        public void HandlePart(IWebProxy webProxy, HtmlDocument htmlDoc, Uri downloadUri, string targetPath, Action<InformationGridEntryViewData> onNewInfo)
+        public void HandlePart(
+            IWebProxy webProxy,
+            HtmlDocument htmlDoc,
+            Uri downloadUri,
+            string targetPath,
+            LinkHandlingOptions linkHandlingOption,
+            Action<InformationGridEntryViewData> onNewInfo)
         {
             var pathParts = GetParts(htmlDoc, onNewInfo);
 
             foreach (var part in pathParts)
             {
                 var absoluteUrlPath = _urlAligner.CreateAbsoluteUrl(downloadUri, part.Value);
-                var download = webProxy.DownloadData(absoluteUrlPath);
-                var savePath = _filePathFactory.CreateAbsoluteSavePath(targetPath, part.Value);
-                part.WriteValue(savePath);
-                _fileRepo.SaveData(savePath, download);
-                PostProcessPart(webProxy, part, absoluteUrlPath, savePath);
+
+                if (linkHandlingOption.DoDownloadLocally)
+                {
+                    var download = webProxy.DownloadData(absoluteUrlPath);
+                    var savePath = _filePathFactory.CreateAbsoluteSavePath(targetPath, part.Value);
+                    part.WriteValue(savePath);
+                    _fileRepo.SaveData(savePath, download);
+                    PostProcessPart(webProxy, part, absoluteUrlPath, savePath);
+                }
+                else
+                {
+                    part.WriteValue(absoluteUrlPath);
+                }
             }
         }
 

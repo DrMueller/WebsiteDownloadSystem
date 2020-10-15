@@ -39,8 +39,8 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
             return htmlDoc.DocumentNode
                 .Descendants()
                 .Where(f => f.Name == "link")
-                .Where(f => f.Attributes.Single(f => f.Name == "rel").Value == "stylesheet")
-                .Select(f => f.Attributes.Single(f => f.Name == "href"))
+                .Where(f => f.Attributes.Single(relAttr => relAttr.Name == "rel").Value == "stylesheet")
+                .Select(f => f.Attributes.Single(refAttr => refAttr.Name == "href"))
                 .Select(attr => new WebsitePart(attr))
                 .ToList();
         }
