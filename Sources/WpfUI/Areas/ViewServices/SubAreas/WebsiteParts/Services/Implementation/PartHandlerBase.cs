@@ -38,6 +38,12 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
 
             foreach (var part in pathParts)
             {
+                // This indicates that we need no download and can just leave it
+                if (part.Value.StartsWith("data:"))
+                {
+                    continue;
+                }
+
                 var absoluteUrlPath = _urlAligner.CreateAbsoluteUrl(downloadUri, part.Value);
 
                 if (linkHandlingOption.DoDownloadLocally)
