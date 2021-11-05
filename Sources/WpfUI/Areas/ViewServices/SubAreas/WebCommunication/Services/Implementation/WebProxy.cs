@@ -22,7 +22,14 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebCommunication.Services.Im
 
         public byte[] DownloadData(string url)
         {
-            return _webClient.DownloadData(url);
+            try
+            {
+                return _webClient.DownloadData(url);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public string DownloadString(Uri uri)

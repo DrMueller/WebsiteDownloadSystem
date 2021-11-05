@@ -27,7 +27,8 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
                 .DocumentNode
                 .Descendants()
                 .Where(f => f.Name == "img")
-                .Select(f => f.Attributes.Single(attr => attr.Name == "src"))
+                .Select(f => f.Attributes.SingleOrDefault(attr => attr.Name == "src"))
+                .Where(f => f != null)
                 .Select(attr => new WebsitePart(attr))
                 .ToList();
 

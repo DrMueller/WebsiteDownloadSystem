@@ -49,10 +49,13 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebsiteParts.Services.Implem
                 if (linkHandlingOption.DoDownloadLocally)
                 {
                     var download = webProxy.DownloadData(absoluteUrlPath);
-                    var savePath = _filePathFactory.CreateAbsoluteSavePath(targetPath, part.Value);
-                    part.WriteValue(savePath);
-                    _fileRepo.SaveData(savePath, download);
-                    PostProcessPart(webProxy, part, absoluteUrlPath, savePath);
+                    if (download != null)
+                    {
+                        var savePath = _filePathFactory.CreateAbsoluteSavePath(targetPath, part.Value);
+                        part.WriteValue(savePath);
+                        _fileRepo.SaveData(savePath, download);
+                        PostProcessPart(webProxy, part, absoluteUrlPath, savePath);
+                    }
                 }
                 else
                 {
