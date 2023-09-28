@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Mmu.Wds.WpfUI.Areas.ViewServices.Orchestration.Models;
+using Mmu.Mlh.LanguageExtensions.Areas.Types.Maybes;
 
 namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebCommunication.Services.Implementation
 {
@@ -10,7 +11,7 @@ namespace Mmu.Wds.WpfUI.Areas.ViewServices.SubAreas.WebCommunication.Services.Im
             var webClient = new WebClient();
             credentials
                 .ToNetCredentials()
-                .Evaluate(cred => webClient.Credentials = cred);
+                .Reduce(() => throw new System.Exception("Tra"));
 
             return new WebProxy(webClient);
         }

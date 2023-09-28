@@ -21,44 +21,19 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
         public bool DownloadIsRunning
         {
             get => _downloadIsRunning;
-            set
-            {
-                if (_downloadIsRunning == value)
-                {
-                    return;
-                }
-
-                _downloadIsRunning = value;
-                OnPropertyChanged();
-            }
+            set => OnPropertyChanged(value, ref _downloadLocally);
         }
 
         public bool DownloadLocally
         {
             get => _downloadLocally;
-            set
-            {
-                if (_downloadLocally == value)
-                {
-                    return;
-                }
-
-                _downloadLocally = value;
-                OnPropertyChanged();
-            }
+            set => OnPropertyChanged(value, ref _downloadLocally);
         }
 
         public string DownloadUrl
         {
             get => _downloadUrl;
-            set
-            {
-                if (_downloadUrl != value)
-                {
-                    _downloadUrl = value;
-                    OnPropertyChanged();
-                }
-            }
+            set => OnPropertyChanged(value, ref _downloadUrl);
         }
 
         public string HeadingDescription => "Download Website";
@@ -69,46 +44,19 @@ namespace Mmu.Wds.WpfUI.Areas.ViewModels
         public string Password
         {
             get => _password;
-            set
-            {
-                if (_password == value)
-                {
-                    return;
-                }
-
-                _password = value;
-                OnPropertyChanged();
-            }
+            set => OnPropertyChanged(value, ref _password);
         }
 
         public string TargetPath
         {
             get => _targetPath;
-            set
-            {
-                if (_targetPath == value)
-                {
-                    return;
-                }
-
-                _targetPath = value;
-                OnPropertyChanged();
-            }
+            set => OnPropertyChanged(value, ref _targetPath);
         }
 
         public string UserName
         {
             get => _userName;
-            set
-            {
-                if (_userName == value)
-                {
-                    return;
-                }
-
-                _userName = value;
-                OnPropertyChanged();
-            }
+            set => OnPropertyChanged(value, ref _userName);
         }
 
         public DownloadViewModel(CommandContainer commandContainer)
